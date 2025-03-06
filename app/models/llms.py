@@ -9,6 +9,7 @@ from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
 from typing import List
+import pandas as pd
 
 class LanguageModel:
     def __init__(self, model: str = "gemini-2.0-flash") -> None:
@@ -37,9 +38,11 @@ class LanguageModel:
         )
 
         self.PROMPT_TEMPLATE = """\
-        You are an expert assistant. Use the provided context to answer the query. 
+        You are an expert assistant. Answer the query directly using the provided context.
         If unsure, state that you don't know. Always answer in Bahasa Indonesia.
-
+        
+        Do not start your response with phrases like "Berdasarkan konteks yang diberikan" or similar introductory statements.
+        
         Query: {user_query} 
         Context: {document_context} 
         Answer:
@@ -77,6 +80,23 @@ class LanguageModel:
         """
         doc_loader = PDFPlumberLoader(path)
         return doc_loader.load()
+    
+    def load_xlsx(self, path: str) -> List[Document]:
+        """
+        Load an Excel (.xlsx) file and extract all text from it into a single string.
+
+        The Excel file is read into a pandas DataFrame and then converted into a CSV string.
+        The resulting string is returned as a list of Document objects.
+
+        Args:
+            path (str): The path to the Excel file.
+
+        Returns:
+            List[Document]: A list of Document objects containing the extracted text in a single string.
+        """
+        data = pd.read_excel(path)
+        structured_text = data.to_csv(index=False)
+        return [Document(page_content=structured_text, metadata={ "source" : path })]
     
     def chunk_docs(self, raw_docs: list) -> list:
         """

@@ -1,6 +1,6 @@
 import os
 
-PDF_STORAGE_PATH = "../data/docs_store/pdfs/"
+PDF_STORAGE_PATH = "../data/docs_store/"
 
 def save_uploaded_file(upload_file) -> str: 
     """
