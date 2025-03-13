@@ -9,6 +9,11 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
 from typing import List
 
+import pysqlite3
+import sys
+
+sys.modules["sqlite3"] = pysqlite3
+
 
 class LanguageModel:
     def __init__(self, model: str = "gemini-2.0-flash") -> None:
