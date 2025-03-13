@@ -14,10 +14,18 @@ st.title("ChatB7 :robot_face:")
 st.write(
     "Asisten virtual yang siap membantu Anda dengan informasi seputar, Profil perusahaan PT Bintang Toedjoe dan produk-produknya"
 )
-st.markdown("---")
+with st.expander("Knowledge Base :"):
+    st.write("ChatB7 baru belajar tentang Company Profile dan Kua Lima saja")
+    st.write(
+        "[Source](https://drive.google.com/drive/folders/1WUx_0ztyjDt-e08SDoqqDePJnnxZXpIV?usp=sharing)"
+    )
+    st.write(
+        "Jika ingin menambahkan Knowledge silahkan upload file berupa pdf atau pptx ke Google Drive diatas"
+    )
+
 # uploaded_pdf = st.file_uploader(
-#     "Upload Dokumen (.pdf, .pptx, .docx, .txt)",
-#     type=["pdf", "pptx", "docx", "txt"],
+#     "Upload Dokumen (.pdf, .pptx)",
+#     type=["pdf", "pptx"],
 #     help="Pilih dokumen",
 #     accept_multiple_files=True,
 # )
@@ -34,8 +42,8 @@ st.markdown("---")
 #         elif uploaded_file.name.endswith(".pptx"):
 #             raw_docs = llm.load_pptx(save_path)
 
-#         elif uploaded_file.name.endswith(".docx"):
-#             raw_docs = llm.load_csv(save_path)
+#         # elif uploaded_file.name.endswith(".docx"):
+#         #     raw_docs = llm.load_csv(save_path)
 
 #         else:
 #             st.error(

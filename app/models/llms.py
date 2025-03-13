@@ -33,7 +33,7 @@ class LanguageModel:
         self.document_vector_db = Chroma(
             collection_name="doc_store",
             embedding_function=self.embedding,
-            persist_directory="../data/chroma_db",
+            persist_directory="./data/chroma_db",
         )
 
     PROMPT_TEMPLATE = """\
@@ -55,10 +55,6 @@ class LanguageModel:
 
     def load_pdf(self, path: str) -> List[any]:
         doc_loader = PDFPlumberLoader(path)
-        return doc_loader.load()
-
-    def load_docx(self, path: str) -> List[any]:
-        doc_loader = UnstructuredPowerPointLoader(path, mode="single")
         return doc_loader.load()
 
     def chunk_docs(self, raw_docs: list) -> list:
