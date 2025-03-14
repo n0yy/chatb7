@@ -3,16 +3,11 @@ from langchain_chroma import Chroma
 from langchain_google_genai import GoogleGenerativeAI
 from langchain_ollama.llms import OllamaLLM
 from langchain_ollama import OllamaEmbeddings
-from langchain_community.document_loaders import PDFPlumberLoader, CSVLoader
+from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_community.document_loaders.powerpoint import UnstructuredPowerPointLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
 from typing import List
-
-import pysqlite3
-import sys
-
-sys.modules["sqlite3"] = pysqlite3
 
 
 class LanguageModel:
@@ -46,8 +41,7 @@ class LanguageModel:
     Respond in a natural, conversational tone as if you inherently know the information. 
     Never refer to "context" or use phrases like "Berdasarkan informasi yang diberikan" or similar introductory statements.
     If the question involves specific terms that are common knowledge but not mentioned in the provided information, you may include general information about those terms.
-    If specific information is not available, simply state what you do know without mentioning limitations of your information source.
-    Provide your response in a clean, readable format with short paragraphs and bullet points when appropriate.
+    If specific information is not available, simply state what you do know without mentioning limitations of your information source.Readable format with short paragraphs and bullet points when appropriate.
 
     Question: {user_query}
     Information: {document_context}
