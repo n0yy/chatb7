@@ -25,8 +25,7 @@ with st.sidebar:
     with st.expander("Changelog"):
         st.markdown(
             """            
-            ### _Version 0.0.1_ (Maret 2025)
-            
+            ### _Version 0.1.2-beta_  
             #### Features:
             - ChatB7 Released
             - Knowledge base:
