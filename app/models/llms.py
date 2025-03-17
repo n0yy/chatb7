@@ -1,13 +1,8 @@
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain_chroma import Chroma
-from langchain_google_genai import GoogleGenerativeAI
-from langchain_ollama.llms import OllamaLLM
-from langchain_ollama import OllamaEmbeddings
-from langchain_community.document_loaders import PDFPlumberLoader
-from langchain_community.document_loaders.powerpoint import UnstructuredPowerPointLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.prompts import ChatPromptTemplate
-from typing import List
+from langchain_google_genai.llms import GoogleGenerativeAI
+from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
+from langchain.chains.question_answering import load_qa_chain
+from langchain.prompts import PromptTemplate
 
 
 class LanguageModel:
@@ -23,55 +18,36 @@ class LanguageModel:
 
         """
 
-        if "gemini" in model:
-            self.model = GoogleGenerativeAI(model=model)
-            self.embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        else:
-            self.model = OllamaLLM(model=model)
-            self.embedding = OllamaEmbeddings(model=model)
-
-        self.document_vector_db = Chroma(
-            collection_name="doc_store",
-            embedding_function=self.embedding,
-            persist_directory="./data/chroma_db",
+        self.model = GoogleGenerativeAI(model=model)
+        self.vector_store = PineconeVectorStore(
+            index_name="chatb7",
+            embedding=GoogleGenerativeAIEmbeddings(model="models/text-embedding-004"),
         )
 
-    PROMPT_TEMPLATE = """\
-    You are an expert assistant. Answer the following question clearly and directly in Bahasa Indonesia.
-    Respond in a natural, conversational tone as if you inherently know the information. 
-    Never refer to "context" or use phrases like "Berdasarkan informasi yang diberikan" or similar introductory statements.
-    If the question involves specific terms that are common knowledge but not mentioned in the provided information, you may include general information about those terms.
-    If specific information is not available, simply state what you do know without mentioning limitations of your information source.Readable format with short paragraphs and bullet points when appropriate.
+        self.PROMPT_TEMPLATE = """
+Kamu adalah asisten AI yang membantu menjawab pertanyaan tentang PT Bintang Toedjoe menggunakan konteks yang diberikan.
+Berikan jawaban yang lengkap, informatif, dan dalam Bahasa Indonesia yang natural dan ramah.
 
-    Question: {user_query}
-    Information: {document_context}
-    Answer:
-    """
+Konteks:
+{context}
 
-    def load_pptx(self, path: str) -> str:
-        doc_loader = UnstructuredPowerPointLoader(path, mode="single")
-        return doc_loader.load()
+Pertanyaan:
+{question}
 
-    def load_pdf(self, path: str) -> List[any]:
-        doc_loader = PDFPlumberLoader(path)
-        return doc_loader.load()
+Jawaban (dalam Bahasa Indonesia yang natural dan informatif):
+"""
 
-    def chunk_docs(self, raw_docs: list) -> list:
-        text_processor = RecursiveCharacterTextSplitter(
-            chunk_size=1000, chunk_overlap=200, add_start_index=True
+    def run(self, query: str) -> str:
+        prompt = PromptTemplate(
+            template=self.PROMPT_TEMPLATE,
+            input_variables=["question", "context"],
         )
-        return text_processor.split_documents(raw_docs)
 
-    def index_docs(self, doc_chunk: list):
-        self.document_vector_db.add_documents(doc_chunk)
-
-    def find_related_docs(self, query: str) -> list:
-        return self.document_vector_db.similarity_search(query, k=5)
-
-    def invoke(self, user_query: str, ctx_docs: list) -> str:
-        ctx_text = "\n\n".join([doc.page_content for doc in ctx_docs])
-        conversation_prompt = ChatPromptTemplate.from_template(self.PROMPT_TEMPLATE)
-        response_chain = conversation_prompt | self.model
-        return response_chain.invoke(
-            {"user_query": user_query, "document_context": ctx_text}
+        chain = load_qa_chain(
+            llm=self.model,
+            chain_type="stuff",
+            prompt=prompt,
         )
+        docs = self.vector_store.similarity_search(query=query, k=10)
+
+        return chain.run(input_documents=docs, question=query)
