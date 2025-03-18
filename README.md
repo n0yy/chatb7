@@ -55,15 +55,16 @@ The application requires the following environment variables:
 
 ## Limitations 🚧
 
-- Limited knowledge base (currently only Company Profile and Kua Lima product)
+- Limited knowledge base (currently only Company Profile)
 - Basic features only in the current version
 
 ## Version History 📝
 
-### Version 0.1.2-beta
+### Version 0.1.3-beta
+
 - Initial release of ChatB7
 - Basic UI implementation
-- Knowledge base for Company Profile and Kua Lima product
+- Knowledge base for Company Profile
 
 ## Contributing 🤝
 
