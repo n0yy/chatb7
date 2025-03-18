@@ -7,17 +7,6 @@ from langchain.prompts import PromptTemplate
 
 class LanguageModel:
     def __init__(self, model: str = "gemini-2.0-flash") -> None:
-        """
-        Initialize the LanguageModel class.
-
-        Args:
-            model (str, optional): The language model to use. Defaults to "gemini-2.0-flash".
-
-        Raises:
-            ValueError: If the model is not recognized.
-
-        """
-
         self.model = GoogleGenerativeAI(model=model)
         self.vector_store = PineconeVectorStore(
             index_name="chatb7",

@@ -3,40 +3,43 @@ from dotenv import load_dotenv
 from models.llms import LanguageModel
 from utils.word_stream import word_stream
 
+# Load environment variables
 load_dotenv()
 
-# Load Model
+# Set page config
 st.set_page_config(page_title="ChatB7", page_icon=":robot_face:")
-llm = LanguageModel(model="gemini-2.0-pro-exp-02-05")
 
+if "llm" not in st.session_state:
+    st.session_state.llm = LanguageModel(model="gemini-2.0-pro-exp-02-05")
 
-# Initial State
+llm = st.session_state.llm
+
+# Initial State for messages
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# UI Config
+# UI Header
 st.title("ChatB7 :robot_face:")
 st.write(
     "Asisten virtual yang siap membantu Anda dengan informasi seputar, Profil perusahaan PT Bintang Toedjoe dan produk-produknya"
 )
 
-# Menggunakan expander sebagai alternatif dialog
+# Sidebar - Changelog
 with st.sidebar:
     with st.expander("Changelog"):
         st.markdown(
-            """            
-            ### _Version 0.1.2-beta_  
+            """
+            ### _Version 0.1.3-beta_  
             #### Features:
             - ChatB7 Released
             - Knowledge base:
                 - Company Profile
-                - Kua Lima
             - Tampilan dasar
             ### Limitation
-            - Batas Pengetahuan: hanya Profil Perusahaan dan Kua Lima)
+            - Batas Pengetahuan: hanya Profil Perusahaan
             - Hanya fitur dasar yang tersedia
 
-            Untuk menambahkan pengetahuan ChatB7, silakan unggah file PDF atau PPTX ke Google Drive kami:
+            Untuk menambahkan pengetahuan ChatB7, silakan unggah file PDF, DOCX, atau PPTX ke Google Drive kami:
             """
         )
         st.link_button(
@@ -44,6 +47,7 @@ with st.sidebar:
             "https://drive.google.com/drive/folders/1WUx_0ztyjDt-e08SDoqqDePJnnxZXpIV?usp=sharing",
         )
 
+# Tampilkan Riwayat Percakapan
 for message in st.session_state.messages:
     with st.chat_message(
         message["role"], avatar="🤖" if message["role"] == "ai" else None
@@ -53,9 +57,10 @@ for message in st.session_state.messages:
             st.write("---")
             st.markdown("[Source](%s)" % message["source"])
 
+# Input Pengguna
 user_query = st.chat_input("Kamu nanyuwaakkkkkk..???")
 
-if user_query is not None:
+if user_query:
     # Add user message to history
     st.session_state.messages.append({"role": "user", "content": user_query})
 
