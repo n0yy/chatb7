@@ -37,6 +37,6 @@ Jawaban (dalam Bahasa Indonesia yang natural dan informatif):
             chain_type="stuff",
             prompt=prompt,
         )
-        docs = self.vector_store.similarity_search(query=query, k=10)
+        docs = self.vector_store.similarity_search(query=query, k=4)
 
         return chain.run(input_documents=docs, question=query)

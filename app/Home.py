@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Set page config
-st.set_page_config(page_title="ChatB7", page_icon=":robot_face:", layout="centered")
+st.set_page_config(page_title="Home", page_icon=":robot_face:", layout="centered")
 
 # Initialize session state for the language model
 if "llm" not in st.session_state:
@@ -28,6 +28,7 @@ st.markdown("#### Version")
 with st.expander("v0.1.4-beta"):
     st.markdown(
         """
+        March 20, 2025
         #### Knowledge base:
             - Company Profile
             - Kua Lima
