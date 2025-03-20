@@ -35,7 +35,7 @@ if user_query:
         st.write(user_query)
 
     # Get AI response
-    with st.spinner("Mirasss (mikir keras)...", show_time=True):
+    with st.spinner("Loadingg...", show_time=True):
         response = llm.run(user_query)
         response_text = ""
 
