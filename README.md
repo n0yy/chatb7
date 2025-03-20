@@ -28,24 +28,6 @@ ChatB7 is a Streamlit-based conversational AI assistant that uses Google's Gemin
 - **Embeddings**: Google's text-embedding-004 model
 - **Framework**: LangChain for orchestrating AI components
 
-## Project Structure 📁
-
-```
-chatb7/
-├── .env.example        # Example environment variables configuration
-├── .gitignore          # Git ignore file
-├── requirements.txt    # Project dependencies
-└── app/
-    ├── __init__.py
-    ├── main.py         # Main Streamlit application
-    ├── models/
-    │   ├── __init__.py
-    │   └── llms.py     # Language model implementation
-    └── utils/
-        ├── __init__.py
-        └── word_stream.py  # Word streaming utility
-```
-
 ## Environment Variables 🔑
 
 The application requires the following environment variables:
