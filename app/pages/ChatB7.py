@@ -1,53 +1,19 @@
 import streamlit as st
-from dotenv import load_dotenv
-from models.llms import LanguageModel
 from utils.word_stream import word_stream
-
-# Load environment variables
-load_dotenv()
 
 # Set page config
 st.set_page_config(page_title="ChatB7", page_icon=":robot_face:")
 
-if "llm" not in st.session_state:
-    st.session_state.llm = LanguageModel(model="gemini-2.0-pro-exp-02-05")
-
+# Get the language model from session state
 llm = st.session_state.llm
 
-# Initial State for messages
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+if len(st.session_state.messages) == 0:
+    st.title("ChatB7 :robot_face:")
+    st.write(
+        "Asisten virtual yang siap membantu Anda dengan informasi seputar PT Bintang Toedjoe dan produk-produknya"
+    )
 
-# UI Header
-st.title("ChatB7 :robot_face:")
-st.write(
-    "Asisten virtual yang siap membantu Anda dengan informasi seputar, Profil perusahaan PT Bintang Toedjoe dan produk-produknya"
-)
-
-# Sidebar - Changelog
-with st.sidebar:
-    with st.expander("Changelog"):
-        st.markdown(
-            """
-            ### _Version 0.1.3-beta_  
-            #### Features:
-            - ChatB7 Released
-            - Knowledge base:
-                - Company Profile
-            - Tampilan dasar
-            ### Limitation
-            - Batas Pengetahuan: hanya Profil Perusahaan
-            - Hanya fitur dasar yang tersedia
-
-            Untuk menambahkan pengetahuan ChatB7, silakan unggah file PDF, DOCX, atau PPTX ke Google Drive kami:
-            """
-        )
-        st.link_button(
-            "Akses File Sumber",
-            "https://drive.google.com/drive/folders/1WUx_0ztyjDt-e08SDoqqDePJnnxZXpIV?usp=sharing",
-        )
-
-# Tampilkan Riwayat Percakapan
+# Display chat history
 for message in st.session_state.messages:
     with st.chat_message(
         message["role"], avatar="🤖" if message["role"] == "ai" else None
@@ -58,7 +24,7 @@ for message in st.session_state.messages:
             st.markdown("[Source](%s)" % message["source"])
 
 # Input Pengguna
-user_query = st.chat_input("Kamu nanyuwaakkkkkk..???")
+user_query = st.chat_input("Pertanyaan Anda...")
 
 if user_query:
     # Add user message to history
@@ -88,7 +54,11 @@ if user_query:
                 st.markdown("[Source](%s)" % response.source)
                 # Add the completed AI message with source to history
                 st.session_state.messages.append(
-                    {"role": "ai", "content": response_text, "source": response.source}
+                    {
+                        "role": "ai",
+                        "content": response_text,
+                        "source": response.source,
+                    }
                 )
             else:
                 # Add the completed AI message to history without source
