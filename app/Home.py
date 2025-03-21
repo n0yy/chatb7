@@ -31,7 +31,6 @@ with st.expander("v0.1.4-beta"):
         March 20, 2025
         #### Knowledge base:
             - Company Profile
-            - Kua Lima
 
         Untuk menambahkan pengetahuan ChatB7, silakan unggah file PDF, DOCX, atau PPTX ke Google Drive kami:
         """
