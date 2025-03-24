@@ -41,3 +41,30 @@ Answer (as Bejo with a joyful, friendly, informative, and insightful style):
         docs = self.vector_store.similarity_search(query=query, k=4)
 
         return chain.run(input_documents=docs, question=query)
+
+    def generate_relevant_questions(self, query: str) -> list[str]:
+        docs = self.vector_store.similarity_search(query=query, k=4)
+        context = "\n".join([doc.page_content for doc in docs])
+        prompt = f"""
+        You are an AI assistant named Bejo. Based on the following context and the user's question, generate three relevant questions that could help explore the topic further or clarify the user's intent. Please provide the questions in the same language as the user's question, numbered as 1., 2., 3.
+        make sure you are using POV user.
+        Context:
+        {context}
+
+        User's Question:
+        {query}
+
+        Relevant Questions:
+        """
+
+        response = self.model(prompt)
+
+        lines = response.split("\n")
+        questions = []
+        for line in lines:
+            if line.strip().startswith(("1.", "2.", "3.")):
+                questions.append(line.strip()[2:].strip())
+            if len(questions) == 3:
+                break
+
+        return questions
